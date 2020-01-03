@@ -1,5 +1,11 @@
 import matplotlib.pyplot as plt, numpy as np, pandas as pd
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Program finds thermistor calibration gain and offset from 15 minute
+sample sizes. Find the column number at each temperature before the 
+change of temp of the water bath. Writes file to line 55's file name.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 read_file = pd.read_csv('Z:/IER/Stan Calibration 2252/builds/data/\
 thermistor_record_010220_1526.csv') #Change file name to current iteration
 A = np.shape(read_file)[0]
