@@ -1,0 +1,50 @@
+import matplotlib.pyplot as plt, numpy as np, pandas as pd
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+read_file = pd.read_csv('Z:/IER/Stan Calibration 2252/builds/data/\
+thermistor_record_010220_1526.csv') #Change file name to current iteration
+A = np.shape(read_file)[0]
+B = np.zeros((8,2))
+t = 450 #data sample size
+pt = 5 #input("Measurement points? ") #Default is 5
+file_data = np.zeros((A,8))
+
+for i in range(A):
+        file_data[i,0] = read_file['T1 (C)'][i]
+        file_data[i,1] = read_file['T2 (C)'][i]
+        file_data[i,2] = read_file['T3 (C)'][i]
+        file_data[i,3] = read_file['T4 (C)'][i]
+        file_data[i,4] = read_file['T5 (C)'][i]
+        file_data[i,5] = read_file['T6 (C)'][i]
+        file_data[i,6] = read_file['T7 (C)'][i]
+        file_data[i,7] = read_file['T8 (C)'][i]
+
+#Calculate gain and offset from .csv file
+D = [2136,4396,6413,8193,11809] #Indexes based on last stable temp
+temps = np.zeros((8,t))
+avgs = np.zeros((8,pt))
+for x in range(pt): #Repeat averages for each thermistor
+    j = D[x] #Index from right before temp increases
+    for l in range(8):
+        i = j-t
+        for k in range(t):
+            temps[l,k]=file_data[i,l]
+            i+=1
+    temp_avg_1 = (np.sum(temps, axis = 1))/t #Find sum then average
+    for i in range(8):
+        avgs[i,x] = temp_avg_1[i]
+    print(j, temp_avg_1)
+for i in range(8):
+    x = avgs[i,:]
+    y = np.array([5, 20, 30, 35, 40]) #Target temperatures
+    M = np.array([x, x**0]).T
+    c = np.linalg.solve(M.T.dot(M), M.T.dot(y)) #Linear solution
+    B[i,0] = c[0]
+    B[i,1] = c[1]
+    print(c)
+    y_a = M.dot(c)
+    plt.plot(x, y, 'k-o', label='original') #Plot for visual reference
+    plt.plot(x, y_a, 'r--x', label='approximate')
+    plt.xlabel('x', fontsize=16)
+    plt.show()
+np.savetxt('Z:/IER/Stan Calibration 2252/builds/data/\
+CAL_PARAM_2021.csv', B, delimiter=',', fmt='%1.20f') #Save file location
