@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt, numpy as np, pandas as pd
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Program finds thermistor calibration gain and offset from 15 minute
 sample sizes. Find the column number at each temperature before the 
-change of temp of the water bath. Writes file to line 55's file name.
+change of temp of the water bath. Writes file to line 56's file name.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 read_file = pd.read_csv('Z:/IER/Stan Calibration 2252/builds/data/\
@@ -51,6 +51,7 @@ for i in range(8):
     plt.plot(x, y, 'k-o', label='original') #Plot for visual reference
     plt.plot(x, y_a, 'r--x', label='approximate')
     plt.xlabel('x', fontsize=16)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     plt.show()
 np.savetxt('Z:/IER/Stan Calibration 2252/builds/data/\
 CAL_PARAM_2021.csv', B, delimiter=',', fmt='%1.20f') #Save file location
